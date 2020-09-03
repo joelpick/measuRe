@@ -7,11 +7,6 @@ Authors@R:
            role = c("aut", "cre"),
            email = "joel.l.pick@gmail.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-    person(given = "Ed",
-           family = "Ivimey-Cook",
-           role = c("aut", "cre"),
-           email = "",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: Measure length and area from images
 License: `use_mit_license()`, `use_gpl3_license()` or friends to
     pick a license
