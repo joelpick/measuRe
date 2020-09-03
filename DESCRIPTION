@@ -1,13 +1,18 @@
 Package: measuRe
-Title: What the Package Does (One Line, Title Case)
+Title: Measure length and area from images
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Joel L.",
+           family = "Pick",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
+           email = "joel.l.pick@gmail.com",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person(given = "Ed",
+           family = "Ivimey-Cook",
+           role = c("aut", "cre"),
+           email = "",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Measure length and area from images
 License: `use_mit_license()`, `use_gpl3_license()` or friends to
     pick a license
 Encoding: UTF-8

@@ -38,7 +38,7 @@ plot_image <- function(image, xlim=NULL, ylim=NULL){
 		#on.exit(graphics::par(op))
 
 		plot(NA, xlim=xlim, ylim=ylim)
-		magick::plot(image,add=TRUE)
+		plot(image,add=TRUE)
 
 
 		return(list(box_y=box_y,
