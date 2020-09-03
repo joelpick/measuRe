@@ -2,11 +2,16 @@ Package: measuRe
 Title: Measure length and area from images
 Version: 0.0.0.9000
 Authors@R: 
-    person(given = "Joel L.",
-           family = "Pick",
-           role = c("aut", "cre"),
-           email = "joel.l.pick@gmail.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+    c(person(given = "Joel L.",
+               family = "Pick",
+               role = c("aut", "cre"),
+               email = "joel.l.pick@gmail.com",
+               comment = c(ORCID = "https://orcid.org/0000-0002-6295-3742")),
+        person(given = "Edward",
+               family = "Ivimey-Cook",
+               role = c("aut"),
+               email = "E.Ivimey-Cook@uea.ac.uk",
+               comment = c(ORCID = "https://orcid.org/0000-0003-4910-0443")))
 Description: Measure length and area from images
 License: `use_mit_license()`, `use_gpl3_license()` or friends to
     pick a license
@@ -14,3 +19,4 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1.9000
+Imports: magick
