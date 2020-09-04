@@ -7,26 +7,45 @@
 #' measuRe Function
 #'
 #' This function allows to measure objects on images in pixels
-#' @param image_folder Directory path with images inside. Should only contain images to 
+#' @param image_folder Directory path with images inside. Should only contain images 
+#' @param output_file Directory path to output file. Should not be in image_folder
 #' @param x11 Logical. use x11? defaults to FALSE
 #' @export
 #' @examples
 #' #measuRe()
-measuRe <- function(image_folder, x11=FALSE){
+measuRe <- function(image_folder, output_file, x11=FALSE){
 	#	image_folder="~/Dropbox/measuRe/test"
-	image_names <- list.files(image_folder)
-	all_data <- list()
-	add_removeQ="a"
+	#	output_file="~/Dropbox/measuRe/lengths.Rdata"
+
+	if(file.exists(output_file)){ 
+		load(output_file) 
+	}else{
+		all_data <- list()
+	}
+
+	all_image_names <- list.files(image_folder)
+	image_names <- all_image_names[!all_image_names %in% names(all_data)]
+	done_images <- length(all_image_names[all_image_names %in% names(all_data)])
+
+	if(length(image_names)==0){
+		add_removeQ="f"
+		message("Good news - All images are processed!!!\n")
+	}else{
+		add_removeQ="a"
+	}
+	
 
 	if(x11) x11(type = "cairo", bg = "black", width = 15, height = 15)
 
 
 	for(i in 1:length(image_names)){
 	#i=1
+		n <- paste0((done_images+i),"/",length(all_image_names))
+
 		if(add_removeQ!="f"){ ## if not finished
 			image <- magick::image_read(paste0(image_folder,"/",image_names[i]))
 			
-			image_dat <- basic_plot(image)
+			image_dat <- basic_plot(image,n=n)
 			group_data <- data.frame()
 				add_removeQ="a"
 				while(add_removeQ=="a"){
@@ -44,14 +63,14 @@ measuRe <- function(image_folder, x11=FALSE){
 						graphics::polygon(image_dat$background_x,image_dat$background_y, col="white", border=FALSE)
 						text(mean(image_dat$background_x),mean(image_dat$box_y),"Click on top left hand corner and bottom right hand corner of where you want to zoom in on")
 						corners <- locator(2)
-						image_dat <- basic_plot(image,xlim=sort(corners$x),ylim=sort(corners$y))
+						image_dat <- basic_plot(image,xlim=sort(corners$x),ylim=sort(corners$y),n=n)
 						lines(group_data$x,group_data$y, type="o", col="red", pch=19, cex=1)
 					}					
 					##redo
 					else if(select_points$x<image_dat$redo_max_x & select_points$y<max(image_dat$box_y) & select_points$x>image_dat$redo_min_x & select_points$y>min(image_dat$box_y)){
 						##deleted data and replot
 						group_data <- data.frame()
-						image_dat <- basic_plot(image)
+						image_dat <- basic_plot(image,n=n)
 					}
 					##finish
 					else if(select_points$x<image_dat$finish_max_x & select_points$y<max(image_dat$box_y) & select_points$x>image_dat$finish_min_x & select_points$y>min(image_dat$box_y)){
@@ -73,6 +92,11 @@ measuRe <- function(image_folder, x11=FALSE){
 		}
 
 	}
+	
+	if(length(image_names)>0){
 	dev.off()
+	save(all_data, file=output_file)
+	}
+	
 	return(all_data)
 }
