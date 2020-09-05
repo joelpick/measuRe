@@ -4,10 +4,12 @@
 \alias{plot_buttons}
 \title{plot_buttons Function}
 \usage{
-plot_buttons(id)
+plot_buttons(id, n)
 }
 \arguments{
 \item{id}{image details}
+
+\item{n}{number of image}
 }
 \description{
 Plots buttons on image
