@@ -8,7 +8,6 @@
 #'
 #' This function allows to measure objects on images in pixels
 #' @param image_folder Directory path with images inside. Should only contain images 
-#' @param output_file Directory path to output file. Should not be in image_folder
 #' @param x11 Logical. use x11? defaults to FALSE
 #' @export
 #' @examples

@@ -10,8 +10,6 @@ measuRe(image_folder, x11 = FALSE)
 \item{image_folder}{Directory path with images inside. Should only contain images}
 
 \item{x11}{Logical. use x11? defaults to FALSE}
-
-\item{output_file}{Directory path to output file. Should not be in image_folder}
 }
 \description{
 This function allows to measure objects on images in pixels
