@@ -102,14 +102,14 @@ plot_buttons <- function(id,n){
 	# id <- image_dat 
 	graphics::polygon(id$background_x,id$background_y, col="white", border=FALSE)
 
-	button_plot(id$add_min_x,id$add_max_x,id$box_y,"Add", text_col = "white", back_col="black")
-	button_plot(id$next_min_x,id$next_max_x,id$box_y,"Next", text_col = "white", back_col="black")
-	button_plot(id$zoom_min_x,id$zoom_max_x,id$box_y,"Zoom", text_col = "white", back_col="coral2")
-	button_plot(id$zoomOut_min_x,id$zoomOut_max_x,id$box_y,"Zoom\nOut", text_col = "white", back_col="coral2")
-	button_plot(id$redo_min_x,id$redo_max_x,id$box_y,"Redo", text_col = "white", back_col="cornflowerblue")
-	button_plot(id$redoAll_min_x,id$redoAll_max_x,id$box_y,"Redo\nAll", text_col = "white", back_col="cornflowerblue")
+	button_plot(id$add_min_x,id$add_max_x,id$box_y,"Add", text_col = "white", back_col="tomato3")
+	button_plot(id$next_min_x,id$next_max_x,id$box_y,"Next", text_col = "white", back_col="tomato4")
+	button_plot(id$zoom_min_x,id$zoom_max_x,id$box_y,"Zoom", text_col = "white", back_col="darkorchid3")
+	button_plot(id$zoomOut_min_x,id$zoomOut_max_x,id$box_y,"Zoom\nOut", text_col = "white", back_col="darkorchid4")
+	button_plot(id$redo_min_x,id$redo_max_x,id$box_y,"Redo", text_col = "white", back_col="dodgerblue3")
+	button_plot(id$redoAll_min_x,id$redoAll_max_x,id$box_y,"Redo\nAll", text_col = "white", back_col="dodgerblue4")
 
-	button_plot(id$finish_min_x,id$finish_max_x,id$box_y,"Finish", text_col = "white", back_col="red4")
+	button_plot(id$finish_min_x,id$finish_max_x,id$box_y,"Finish", text_col = "white", back_col="black")
 
 	text(id$progress, mean(id$box_y),n, col = "black", font = 2, cex = 1.2)
 
