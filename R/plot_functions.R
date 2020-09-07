@@ -149,9 +149,10 @@ clickPosition <- function(coords, id){
 #'
 #' Plot previously extracted points
 #' @param group_data data to plot from
-plot_points <- function(group_data){
-	for(k in unique(group_data$item)) lines(y~x,group_data[group_data$item==k,],type="o", col="red", pch=19, cex=1)
+plot_points <- function(group_data, col="red"){
+	for(k in unique(group_data$item)) lines(y~x,group_data[group_data$item==k,],type="o", col=col, pch=19, cex=1)
 }
+
 
 # zoom_coords <- function(){
 

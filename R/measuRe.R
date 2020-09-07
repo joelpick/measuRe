@@ -46,7 +46,7 @@ measuRe <- function(image_folder, x11=FALSE){
 	if(x11) x11(type = "cairo", bg = "black", width = 15, height = 15)
 
 
-	buttons <- c("Prev", "Next","Add","Zoom","Zoom\nOut","Redo","Redo\nAll","Finish")
+	buttons <- c("Prev", "Next","Add","Zoom","Zoom\nOut","Delete\nItem","Delete\nAll","Finish")
 	button_cols <- c("tomato3", "tomato3","tomato4","darkorchid3","darkorchid4","dodgerblue3","dodgerblue4","black")
 
 	i<-n_done
@@ -68,8 +68,8 @@ measuRe <- function(image_folder, x11=FALSE){
 				j <- 1
 			}else{
 				group_data <- all_data[[image_names[i]]]
-				j <- unique(group_data$item)+1
-				plot_points(group_data)
+				j <- if(nrow(group_data)>0) { max(group_data$item)+1 }else{ 1 }
+				plot_points(group_data, col="blue")
 			}
 			
 			add_removeQ="a"
@@ -79,13 +79,15 @@ measuRe <- function(image_folder, x11=FALSE){
 				##next
 				if( clicked=="Next") {
 					##save data
-					if(nrow(group_data)>0) all_data[[image_names[i]]] <- group_data
+					#if(nrow(group_data)>0) 
+					all_data[[image_names[i]]] <- group_data
 					add_removeQ <- "b"
 				}	
 				##prev
 				if( clicked=="Prev") {
 					##save data
-					if(nrow(group_data)>0) all_data[[image_names[i]]] <- group_data
+					#if(nrow(group_data)>0) 
+					all_data[[image_names[i]]] <- group_data
 					i <- if(i>1){ i-2 }else{ i-1 } 
 					add_removeQ <- "b"
 				}
@@ -93,7 +95,9 @@ measuRe <- function(image_folder, x11=FALSE){
 				if( clicked=="Add") {
 					##save data
 					#all_data[[image_names[i]]] <- group_data
-					j=j+1
+					j <- if(nrow(group_data)>0){ max(group_data$item)+1 }else{ j } 
+					image_dat <- basic_plot(image,n=n,buttons=buttons,button_cols=button_cols)
+					plot_points(group_data, col="blue")
 				}				
 				##zoom
 				else if(clicked=="Zoom"){
@@ -114,25 +118,36 @@ measuRe <- function(image_folder, x11=FALSE){
 				else if(clicked=="Zoom\nOut"){
 					##deleted data and replot
 					image_dat <- basic_plot(image,n=n,buttons=buttons,button_cols=button_cols)
-					plot_points(group_data)
+					plot_points(group_data, col="blue")
 				}##redo all
-				else if(clicked=="Redo\nAll"){
+				else if(clicked=="Delete\nAll"){
 					##deleted data and replot
-					group_data <- data.frame()
-					image_dat <- basic_plot(image,n=n,buttons=buttons,button_cols=button_cols)
+					if(nrow(group_data)>0){
+						group_data <- data.frame()
+						image_dat <- basic_plot(image,n=n,buttons=buttons,button_cols=button_cols)
+					}
 				}
 				##redo one item
-				else if(clicked=="Redo"){
+				else if(clicked=="Delete\nItem"){
 					##deleted data and replot
-					group_data <- subset(group_data, item<j)
-					image_dat <- basic_plot(image,n=n,buttons=buttons,button_cols=button_cols)
-					plot_points(group_data)
+					if(nrow(group_data)>0){
+						button_plot(image_dat$background_x,image_dat$background_y,"Click on group that want to redo", text_col = "black", back_col="white", border=FALSE, text_cex=1)
+						remove <- locator(1)
+						if(insideFunc(remove,image_dat$xlim,image_dat$ylim)){
+							distances <- sqrt((remove$x-group_data$x)^2+(remove$y-group_data$y)^2)
+							group_data <- subset(group_data,item!=group_data[which(distances == min(distances)),"item"])
+							image_dat <- basic_plot(image,n=n,buttons=buttons,button_cols=button_cols)
+							plot_points(group_data, col="blue")
+						}else{
+							plot_buttons(image_dat,n,button_cols=button_cols)
+						}
+					}
 				}
 				##finish
 				else if(clicked=="Finish"){
 					add_removeQ <- "f"
 					## only save data if some points have been clicked
-					if(nrow(group_data)>0) all_data[[image_names[i]]] <- group_data
+					all_data[[image_names[i]]] <- group_data
 				}
 				##if click on white box at bottom do nothing
 				else if(clicked=="background"){
@@ -149,6 +164,8 @@ measuRe <- function(image_folder, x11=FALSE){
 	
 	if(n_new>0){
 	dev.off()
+	## get rid of empty list entries
+	all_data <- all_data[sapply(all_data, function(x) nrow(x)>0)]
 	save(all_data, file=output_file)
 	}
 	
