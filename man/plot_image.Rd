@@ -4,14 +4,12 @@
 \alias{plot_image}
 \title{plot_image Function}
 \usage{
-plot_image(image, xlim = NULL, ylim = NULL)
+plot_image(image, id)
 }
 \arguments{
 \item{image}{path to image}
 
-\item{xlim}{subset of image to plot. Default plots all x}
-
-\item{ylim}{subset of image to plot. Default plots all y}
+\item{id}{image details from image_details()}
 }
 \description{
 Plots image

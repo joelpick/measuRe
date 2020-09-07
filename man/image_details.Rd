@@ -4,7 +4,7 @@
 \alias{image_details}
 \title{image_details Function}
 \usage{
-image_details(image, xlim = NULL, ylim = NULL)
+image_details(image, xlim = NULL, ylim = NULL, buttons)
 }
 \arguments{
 \item{image}{path to image}
@@ -12,6 +12,8 @@ image_details(image, xlim = NULL, ylim = NULL)
 \item{xlim}{subset of image to plot. Default plots all x}
 
 \item{ylim}{subset of image to plot. Default plots all y}
+
+\item{buttons}{vector of button names}
 }
 \description{
 Plots image

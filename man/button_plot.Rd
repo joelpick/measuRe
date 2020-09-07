@@ -4,14 +4,12 @@
 \alias{button_plot}
 \title{button_plot Function}
 \usage{
-button_plot(min_x, max_x, y, text, back_col, text_col)
+button_plot(x, y, text, back_col, text_col, border = TRUE, text_cex = 1.2)
 }
 \arguments{
-\item{min_x}{minimum x coord}
+\item{x}{min and max x coords}
 
-\item{max_x}{max x coord}
-
-\item{y}{y cords of box}
+\item{y}{min and max y coords}
 
 \item{text}{text in box}
 

@@ -4,7 +4,7 @@
 \alias{basic_plot}
 \title{basic_plot Function}
 \usage{
-basic_plot(image, xlim = NULL, ylim = NULL, n)
+basic_plot(image, xlim = NULL, ylim = NULL, buttons, button_cols, n)
 }
 \arguments{
 \item{image}{path to image}
