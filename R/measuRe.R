@@ -26,10 +26,16 @@ measuRe <- function(image_folder, x11=FALSE){
 
 	all_image_names <- list.files(image_folder)
 	all_image_names <- all_image_names[!all_image_names %in% "SavedData.Rdata"]
-	image_names <- all_image_names[!all_image_names %in% names(all_data)]
-	done_images <- length(all_image_names[all_image_names %in% names(all_data)])
+	
+	done_images <- all_image_names[all_image_names %in% names(all_data)]
+	new_images <- all_image_names[!all_image_names %in% names(all_data)]
+	image_names <- c(done_images,new_images)
 
-	if(length(image_names)==0){
+	n_done <- length(done_images)
+	n_new <- length(new_images)
+	n_all <- length(image_names)
+	
+	if(n_new==0){
 		add_removeQ="f"
 		message("Good news - All images are processed!!!\n")
 	}else{
@@ -40,83 +46,108 @@ measuRe <- function(image_folder, x11=FALSE){
 	if(x11) x11(type = "cairo", bg = "black", width = 15, height = 15)
 
 
-	for(i in 1:length(image_names)){
-	#i=1
-		n <- paste0((done_images+i),"/",length(all_image_names))
+	buttons <- c("Prev", "Next","Add","Zoom","Zoom\nOut","Redo","Redo\nAll","Finish")
+	button_cols <- c("tomato3", "tomato3","tomato4","darkorchid3","darkorchid4","dodgerblue3","dodgerblue4","black")
 
-		j <- 1
+	i<-n_done
+	while(i<n_all){
+		i<-i+1
+
+	#for(i in (n_done+1):n_all){
+	#i=1
+		n <- paste0((i),"/",n_all)
 
 		if(add_removeQ!="f"){ ## if not finished
 			image <- magick::image_read(paste0(image_folder,"/",image_names[i]))
 			
-			image_dat <- basic_plot(image,n=n)
-			group_data <- data.frame()
-				add_removeQ="a"
-				while(add_removeQ=="a"){
-						select_points <- graphics::locator(1)
-					
-					##add
-					if( select_points$x<image_dat$add_max_x & select_points$y<max(image_dat$box_y) & select_points$x>image_dat$add_min_x & select_points$y>min(image_dat$box_y)) {
-						##save data
-						#all_data[[image_names[i]]] <- group_data
-						j=j+1
-					}
-					##next
-					if( select_points$x<image_dat$next_max_x & select_points$y<max(image_dat$box_y) & select_points$x>image_dat$next_min_x & select_points$y>min(image_dat$box_y)) {
-						add_removeQ <- "b"
-						##save data
-						all_data[[image_names[i]]] <- group_data
-					}
-					##zoom
-					else if(select_points$x<image_dat$zoom_max_x & select_points$y<max(image_dat$box_y) & select_points$x>image_dat$zoom_min_x & select_points$y>min(image_dat$box_y)){
-						##deleted data and replot
-						graphics::polygon(image_dat$background_x,image_dat$background_y, col="white", border=FALSE)
-						text(mean(image_dat$background_x),mean(image_dat$box_y),"Click on top left hand corner and bottom right hand corner\nof where you want to zoom in on")
-						corners <- locator(2)
-						image_dat <- basic_plot(image,xlim=sort(corners$x),ylim=sort(corners$y),n=n)
-						#lines(group_data$x,group_data$y, type="o", col="red", pch=19, cex=1)
-						for(k in unique(group_data$item)) lines(y~x,group_data[group_data$item==k,],type="o", col="red", pch=19, cex=1)
-					}					
-					##zoom out
-					else if(select_points$x<image_dat$zoomOut_max_x & select_points$y<max(image_dat$box_y) & select_points$x>image_dat$zoomOut_min_x & select_points$y>min(image_dat$box_y)){
-						##deleted data and replot
-						image_dat <- basic_plot(image,n=n)
-						for(k in unique(group_data$item)) lines(y~x,group_data[group_data$item==k,],type="o", col="red", pch=19, cex=1)
-					}##redo all
-					else if(select_points$x<image_dat$redoAll_max_x & select_points$y<max(image_dat$box_y) & select_points$x>image_dat$redoAll_min_x & select_points$y>min(image_dat$box_y)){
-						##deleted data and replot
-						group_data <- data.frame()
-						image_dat <- basic_plot(image,n=n)
-					}
-					##redo one item
-					else if(select_points$x<image_dat$redo_max_x & select_points$y<max(image_dat$box_y) & select_points$x>image_dat$redo_min_x & select_points$y>min(image_dat$box_y)){
-						##deleted data and replot
-						group_data <- subset(group_data, item<j)
-						image_dat <- basic_plot(image,n=n)
-						for(k in unique(group_data$item)) lines(y~x,group_data[group_data$item==k,],type="o", col="red", pch=19, cex=1)
-					}
-					##finish
-					else if(select_points$x<image_dat$finish_max_x & select_points$y<max(image_dat$box_y) & select_points$x>image_dat$finish_min_x & select_points$y>min(image_dat$box_y)){
-						add_removeQ <- "f"
-						## only save data if some points have been clicked
-						if(nrow(group_data)>0) all_data[[image_names[i]]] <- group_data
-					}
-					##if click on white box at bottom do nothing
-					else if(select_points$x>min(image_dat$background_x) & select_points$y<max(image_dat$background_y)){
-						add_removeQ="a"
-					}
-					else{ 
-						points(select_points$x,select_points$y, col="red", pch=20, cex=1)
-						if(nrow(group_data[group_data$item==j,])>0) lines(c(select_points$x,group_data$x[nrow(group_data)]),c(select_points$y,group_data$y[nrow(group_data)]), col="red", lwd=2)	
-						group_data <- rbind(group_data, data.frame(file=image_names[i], item=j, x=select_points$x, y=select_points$y) )
-		
-					}
-				}
-		}
+			image_dat <- basic_plot(image,n=n,buttons=buttons,button_cols=button_cols)
 
+			### need to load in group data and plot it!!!!!!
+			if(is.null(all_data[[image_names[i]]])){
+				group_data <- data.frame()
+				j <- 1
+			}else{
+				group_data <- all_data[[image_names[i]]]
+				j <- unique(group_data$item)+1
+				plot_points(group_data)
+			}
+			
+			add_removeQ="a"
+			while(add_removeQ=="a"){
+				select_points <- graphics::locator(1)
+				clicked <- clickPosition(select_points,image_dat)
+				##next
+				if( clicked=="Next") {
+					##save data
+					if(nrow(group_data)>0) all_data[[image_names[i]]] <- group_data
+					add_removeQ <- "b"
+				}	
+				##prev
+				if( clicked=="Prev") {
+					##save data
+					if(nrow(group_data)>0) all_data[[image_names[i]]] <- group_data
+					i <- if(i>1){ i-2 }else{ i-1 } 
+					add_removeQ <- "b"
+				}
+				##add
+				if( clicked=="Add") {
+					##save data
+					#all_data[[image_names[i]]] <- group_data
+					j=j+1
+				}				
+				##zoom
+				else if(clicked=="Zoom"){
+					button_plot(image_dat$background_x,image_dat$background_y,"Click on top left hand corner and bottom right hand corner\nof where you want to zoom in on", text_col = "black", back_col="white", border=FALSE, text_cex=1)
+
+					# click on left hand corner and bottom right hand corner of where you want to zoom in on
+					corners <- locator(2)
+
+					## if clicked points are inside image then zoom, other cancel zoom
+					if(sum(insideFunc(corners,image_dat$xlim,image_dat$ylim))==2) {
+						image_dat <- basic_plot(image,xlim=sort(corners$x),ylim=sort(corners$y),n=n,buttons=buttons,button_cols=button_cols)
+						plot_points(group_data)
+					}else{
+						plot_buttons(image_dat,n,button_cols=button_cols)
+					}
+				}					
+				##zoom out
+				else if(clicked=="Zoom\nOut"){
+					##deleted data and replot
+					image_dat <- basic_plot(image,n=n,buttons=buttons,button_cols=button_cols)
+					plot_points(group_data)
+				}##redo all
+				else if(clicked=="Redo\nAll"){
+					##deleted data and replot
+					group_data <- data.frame()
+					image_dat <- basic_plot(image,n=n,buttons=buttons,button_cols=button_cols)
+				}
+				##redo one item
+				else if(clicked=="Redo"){
+					##deleted data and replot
+					group_data <- subset(group_data, item<j)
+					image_dat <- basic_plot(image,n=n,buttons=buttons,button_cols=button_cols)
+					plot_points(group_data)
+				}
+				##finish
+				else if(clicked=="Finish"){
+					add_removeQ <- "f"
+					## only save data if some points have been clicked
+					if(nrow(group_data)>0) all_data[[image_names[i]]] <- group_data
+				}
+				##if click on white box at bottom do nothing
+				else if(clicked=="background"){
+					add_removeQ="a"
+				}
+				else if(clicked=="image"){
+					points(select_points$x,select_points$y, col="red", pch=20, cex=1)
+					if(nrow(group_data[group_data$item==j,])>0) lines(c(select_points$x,group_data$x[nrow(group_data)]),c(select_points$y,group_data$y[nrow(group_data)]), col="red", lwd=2)	
+					group_data <- rbind(group_data, data.frame(file=image_names[i], item=j, x=select_points$x, y=select_points$y) )
+				}
+			}
+		}
 	}
 	
-	if(length(image_names)>0){
+	if(n_new>0){
 	dev.off()
 	save(all_data, file=output_file)
 	}

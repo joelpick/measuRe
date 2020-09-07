@@ -4,116 +4,99 @@
 #' @param image path to image
 #' @param xlim subset of image to plot. Default plots all x
 #' @param ylim subset of image to plot. Default plots all y
-image_details <- function(image, xlim=NULL, ylim=NULL){
+#' @param buttons vector of button names
+image_details <- function(image, xlim=NULL, ylim=NULL, buttons){
+	image_details <- c(width = magick::image_info(image)["width"][[1]], height = magick::image_info(image)["height"][[1]])
+	if(is.null(xlim)) xlim <- c(0,image_details[1])
+	if(is.null(ylim)) ylim <- c(0,image_details[2])
+	
+	length_y <- diff(ylim)
+	box_y <- c(
+		min=ylim[1] + length_y * -0.16, 
+		mid=ylim[1] + length_y * -0.1, 
+		max=ylim[1] + length_y * -0.04)
+	background_y <- c(
+		min=ylim[1] + length_y * -0.25,
+		mid=ylim[1] + length_y * -0.1,
+		max=ylim[1])
+	background_x <- c(
+		min=xlim[1] + diff(xlim) * -0.1,
+		mid=mean(xlim),
+		max=xlim[2] + diff(xlim) * 0.1)
 
+	length_x <- diff(xlim) / (length(buttons)+1)
+
+	button_pos <- list()
+	for(i in seq_along(buttons)) {
+		mid_x <- xlim[1] + length_x*(i-0.5)
+		min_x <- mid_x - length_x*0.4
+		max_x <- mid_x + length_x*0.4
+		button_pos[[buttons[i]]] <- c(min=min_x, mid=mid_x, max=max_x)
+	}
+
+	progress <- xlim[1] + length_x*(length(buttons)+0.5)
+
+	return(list(
+		xlim=xlim,
+		ylim=ylim,
+		box_y=box_y,
+		buttons_x=button_pos,
+		progress=progress,
+		background_y=background_y,
+		background_x=background_x))
 }
+
+
+#' button_plot Function
+#'
+#' Plots buttons on image
+#' @param x min and max x coords
+#' @param y min and max y coords
+#' @param text text in box
+#' @param back_col background colour
+#' @param text_col text colour
+button_plot <- function(x, y, text, back_col, text_col,border=TRUE,text_cex=1.2){
+	button_y <- c(y[1],y[3],y[3],y[1])
+	button_x <- c(x[1],x[1],x[3],x[3])
+	graphics::polygon(button_x,button_y, col=back_col, border=border,xpd=TRUE)
+	text(x[2], y[2],text, col = text_col, font = 2, cex = text_cex)
+}
+
 
 
 #' plot_image Function
 #'
 #' Plots image
 #' @param image path to image
-#' @param xlim subset of image to plot. Default plots all x
-#' @param ylim subset of image to plot. Default plots all y
+#' @param id image details from image_details()
 #' @examples
 #' #plot_image()
-plot_image <- function(image, xlim=NULL, ylim=NULL){
-	image_details <- c(width = magick::image_info(image)["width"][[1]], height = magick::image_info(image)["height"][[1]])
-		
-	if(is.null(xlim)) xlim <- c(0,image_details[1])
-	if(is.null(ylim)) ylim <- c(0,image_details[2])
-
-	length_y <- diff(ylim)
-	min_y <- ylim[1]
-	min_y_new <- min_y + length_y * - 0.16
-	ylim[1] <- min_y_new
-	box_y <- c(min_y+ length_y * - 0.04,min_y_new,min_y_new, min_y+ length_y * - 0.04)
+plot_image <- function(image, id){
 	
-	background_y <- c(min_y+ length_y * - 0.2,min_y,min_y, min_y+ length_y * - 2)
-	background_x <- rep(xlim+xlim*c(-0.1,0.1),each=2)
-
-
-	length_x <- diff(xlim) / 16
-	add_min_x <- xlim[1] + length_x*0.5
-	add_max_x <- xlim[1] + length_x*2.1
-	next_min_x <- xlim[1] + length_x*2.4
-	next_max_x <- xlim[1] + length_x*4.1
-	zoom_min_x <- xlim[1] + length_x*4.4
-	zoom_max_x <- xlim[1] + length_x*6.1
-	zoomOut_min_x <- xlim[1] + length_x*6.4
-	zoomOut_max_x <- xlim[1] + length_x*8.1
-	redo_min_x <- xlim[1] + length_x*8.4
-	redo_max_x <- xlim[1] + length_x*10.1
-	redoAll_min_x <- xlim[1] + length_x*10.4
-	redoAll_max_x <- xlim[1] + length_x*12.1
-	finish_min_x <- xlim[1] + length_x*12.4
-	finish_max_x <- xlim[1] + length_x*14.1
-	progress <- xlim[1] + length_x*15
-
 	op <- graphics::par(mar=c(0,0,0,0), mfrow=c(1,1))
 	#on.exit(graphics::par(op))
-
-	plot(NA, xlim=xlim, ylim=ylim)
+	id$ylim[1] <- id$box_y["min"]
+	plot(NA, xlim=id$xlim, ylim=id$ylim)
 	plot(image,add=TRUE)
-
-
-	return(list(box_y=box_y,
-		length_x=length_x,
-		add_min_x=add_min_x,
-		add_max_x=add_max_x,
-		next_min_x=next_min_x,
-		next_max_x=next_max_x,
-		zoom_min_x=zoom_min_x,
-		zoom_max_x=zoom_max_x,
-		zoomOut_min_x=zoomOut_min_x,
-		zoomOut_max_x=zoomOut_max_x,
-		redo_min_x=redo_min_x,
-		redo_max_x=redo_max_x,
-		redoAll_min_x=redoAll_min_x,
-		redoAll_max_x=redoAll_max_x,
-		finish_min_x=finish_min_x,
-		finish_max_x=finish_max_x,
-		background_y=background_y,
-		background_x=background_x,
-		progress=progress))
 }
 
-#' button_plot Function
-#'
-#' Plots buttons on image
-#' @param min_x minimum x coord
-#' @param max_x max x coord
-#' @param y y cords of box
-#' @param text text in box
-#' @param back_col background colour
-#' @param text_col text colour
-button_plot <- function(min_x,max_x,y, text,back_col,  text_col){
-	x <- c(min_x,min_x,max_x,max_x)
-	graphics::polygon(x,y, col=back_col, border=TRUE,xpd=TRUE)
-	text(mean(x), mean(y),text, col = text_col, font = 2, cex = 1.2)
-}
 
 #' plot_buttons Function
 #'
 #' Plots buttons on image
 #' @param id image details
 #' @param n number of image
-plot_buttons <- function(id,n){
-	# id <- image_dat 
-	graphics::polygon(id$background_x,id$background_y, col="white", border=FALSE)
+#' @param button_cols button colours
+plot_buttons <- function(id, n, button_cols){
+	# white background at the bottom
+	button_plot(id$background_x,id$background_y,"", text_col = "white", back_col="white", border=FALSE)
 
-	button_plot(id$add_min_x,id$add_max_x,id$box_y,"Add", text_col = "white", back_col="tomato3")
-	button_plot(id$next_min_x,id$next_max_x,id$box_y,"Next", text_col = "white", back_col="tomato4")
-	button_plot(id$zoom_min_x,id$zoom_max_x,id$box_y,"Zoom", text_col = "white", back_col="darkorchid3")
-	button_plot(id$zoomOut_min_x,id$zoomOut_max_x,id$box_y,"Zoom\nOut", text_col = "white", back_col="darkorchid4")
-	button_plot(id$redo_min_x,id$redo_max_x,id$box_y,"Redo", text_col = "white", back_col="dodgerblue3")
-	button_plot(id$redoAll_min_x,id$redoAll_max_x,id$box_y,"Redo\nAll", text_col = "white", back_col="dodgerblue4")
+	# plot all buttons
+	for(i in seq_along(id$buttons_x))  button_plot(id$buttons_x[[i]],id$box_y,names(id$buttons_x[i]), text_col = "white", back_col=button_cols[i])
 
-	button_plot(id$finish_min_x,id$finish_max_x,id$box_y,"Finish", text_col = "white", back_col="black")
-
+	## plot progress
 	text(id$progress, mean(id$box_y),n, col = "black", font = 2, cex = 1.2)
 
-		
 }
 
 #' basic_plot Function
@@ -125,13 +108,49 @@ plot_buttons <- function(id,n){
 #' @param n number of image
 #' @examples
 #' #basic_plot()
-basic_plot<-function(image, xlim=NULL, ylim=NULL,n){
+basic_plot<-function(image, xlim=NULL, ylim=NULL,buttons, button_cols,n){
+
+		image_details<- image_details(image, xlim=xlim, ylim=ylim, buttons)
 		
-		image_details<- plot_image(image, xlim=xlim, ylim=ylim)
+		plot_image(image, image_details)
 		
-		plot_buttons(image_details,n)
+		plot_buttons(image_details,n,button_cols=button_cols)
 		
 		return(image_details)
+}
+
+
+#' insideFunc Function
+#'
+#' Are coords within button borders?
+#' @param coords coords to check
+#' @param x x box coords
+#' @param y y box coords
+insideFunc<-function(coords,x,y){
+	coords$x<max(x) & 
+	coords$y<max(y) & 
+	coords$x>min(x) & 
+	coords$y>min(y)
+}
+
+#' insideFunc Function
+#'
+#' Are coords within button borders?
+#' @param coords coords to check
+#' @param id Image details
+clickPosition <- function(coords, id){
+	out <- names(which(c(image= insideFunc(coords,id$xlim, id$ylim),sapply(id$buttons,function(z)insideFunc(coords,z, id$box_y)))))
+	if(length(out)==0) out<-"background"
+	return(out)
+}
+
+
+#' plot_points Function
+#'
+#' Plot previously extracted points
+#' @param group_data data to plot from
+plot_points <- function(group_data){
+	for(k in unique(group_data$item)) lines(y~x,group_data[group_data$item==k,],type="o", col="red", pch=19, cex=1)
 }
 
 # zoom_coords <- function(){
