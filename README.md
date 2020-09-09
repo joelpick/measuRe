@@ -7,6 +7,7 @@ Measure length and area from images in R
 # Installation
 
 devtools::install_github("joelpick/measuRe")
+
 library(measuRe)
 
 
