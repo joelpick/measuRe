@@ -6,7 +6,7 @@
 #' @param ylim subset of image to plot. Default plots all y
 #' @param buttons vector of button names
 image_details <- function(image, xlim=NULL, ylim=NULL, buttons){
-	image_details <- c(width = magick::image_info(image)["width"][[1]], height = magick::image_info(image)["height"][[1]])
+	if(!is.null(image)) image_details <- c(width = magick::image_info(image)["width"][[1]], height = magick::image_info(image)["height"][[1]])
 	if(is.null(xlim)) xlim <- c(0,image_details[1])
 	if(is.null(ylim)) ylim <- c(0,image_details[2])
 	
@@ -77,7 +77,7 @@ plot_image <- function(image, id){
 	#on.exit(graphics::par(op))
 	id$ylim[1] <- id$box_y["min"]
 	plot(NA, xlim=id$xlim, ylim=id$ylim)
-	plot(image,add=TRUE)
+	if(!is.null(image)) plot(image,add=TRUE)
 }
 
 
@@ -110,13 +110,13 @@ plot_buttons <- function(id, n, button_cols){
 #' #basic_plot()
 basic_plot<-function(image, xlim=NULL, ylim=NULL,buttons, button_cols,n){
 
-		image_details<- image_details(image, xlim=xlim, ylim=ylim, buttons)
-		
-		plot_image(image, image_details)
-		
-		plot_buttons(image_details,n,button_cols=button_cols)
-		
-		return(image_details)
+	image_details<- image_details(image, xlim=xlim, ylim=ylim, buttons)
+	
+	plot_image(image, image_details)
+			
+	plot_buttons(image_details,n,button_cols=button_cols)
+	
+	return(image_details)
 }
 
 
@@ -149,10 +149,15 @@ clickPosition <- function(coords, id){
 #'
 #' Plot previously extracted points
 #' @param group_data data to plot from
-plot_points <- function(group_data, col="red"){
-	for(k in unique(group_data$item)) lines(y~x,group_data[group_data$item==k,],type="o", col=col, pch=19, cex=1)
+# plot_points <- function(group_data, col="red"){
+# 	for(k in unique(group_data$item)) lines(y~x,group_data[group_data$item==k,],type="o", col=col, pch=19, cex=1)
+# }
+plot_points <- function(group_data, current_item, current_col="red", done_col="blue"){
+	for(k in unique(group_data$item)){
+		col <- if(k==current_item){ current_col }else{ done_col }
+		lines(y~x,group_data[group_data$item==k,],type="o", col=col, pch=19, cex=1)
+	}
 }
-
 
 # zoom_coords <- function(){
 

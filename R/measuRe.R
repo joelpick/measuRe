@@ -69,7 +69,8 @@ measuRe <- function(image_folder, x11=FALSE){
 			}else{
 				group_data <- all_data[[image_names[i]]]
 				j <- if(nrow(group_data)>0) { max(group_data$item)+1 }else{ 1 }
-				plot_points(group_data, col="blue")
+				#plot_points(group_data, col="blue")
+				plot_points(group_data, current_item=j)
 			}
 			
 			add_removeQ="a"
@@ -97,7 +98,8 @@ measuRe <- function(image_folder, x11=FALSE){
 					#all_data[[image_names[i]]] <- group_data
 					j <- if(nrow(group_data)>0){ max(group_data$item)+1 }else{ j } 
 					image_dat <- basic_plot(image,n=n,buttons=buttons,button_cols=button_cols)
-					plot_points(group_data, col="blue")
+					#plot_points(group_data, col="blue")
+					plot_points(group_data, current_item=j)
 				}				
 				##zoom
 				else if(clicked=="Zoom"){
@@ -109,7 +111,11 @@ measuRe <- function(image_folder, x11=FALSE){
 					## if clicked points are inside image then zoom, other cancel zoom
 					if(sum(insideFunc(corners,image_dat$xlim,image_dat$ylim))==2) {
 						image_dat <- basic_plot(image,xlim=sort(corners$x),ylim=sort(corners$y),n=n,buttons=buttons,button_cols=button_cols)
-						plot_points(group_data)
+						#plot_points(group_data)
+						if(nrow(group_data)>0) {
+							plot_points(group_data, current_item=j)
+							plot_buttons(image_dat,n,button_cols=button_cols)
+						}
 					}else{
 						plot_buttons(image_dat,n,button_cols=button_cols)
 					}
@@ -118,16 +124,18 @@ measuRe <- function(image_folder, x11=FALSE){
 				else if(clicked=="Zoom\nOut"){
 					##deleted data and replot
 					image_dat <- basic_plot(image,n=n,buttons=buttons,button_cols=button_cols)
-					plot_points(group_data, col="blue")
-				}##redo all
+					#plot_points(group_data, col="blue")
+					plot_points(group_data, current_item=j)
+				}##delete all
 				else if(clicked=="Delete\nAll"){
 					##deleted data and replot
 					if(nrow(group_data)>0){
 						group_data <- data.frame()
 						image_dat <- basic_plot(image,n=n,buttons=buttons,button_cols=button_cols)
 					}
+					j<-1
 				}
-				##redo one item
+				##delete one item
 				else if(clicked=="Delete\nItem"){
 					##deleted data and replot
 					if(nrow(group_data)>0){
@@ -137,11 +145,14 @@ measuRe <- function(image_folder, x11=FALSE){
 							distances <- sqrt((remove$x-group_data$x)^2+(remove$y-group_data$y)^2)
 							group_data <- subset(group_data,item!=group_data[which(distances == min(distances)),"item"])
 							image_dat <- basic_plot(image,n=n,buttons=buttons,button_cols=button_cols)
-							plot_points(group_data, col="blue")
+							#plot_points(group_data, col="blue")
+							plot_points(group_data, current_item=j)
 						}else{
 							plot_buttons(image_dat,n,button_cols=button_cols)
 						}
 					}
+					j <- if(nrow(group_data)>0) { max(group_data$item)+1 }else{ 1 }
+
 				}
 				##finish
 				else if(clicked=="Finish"){
