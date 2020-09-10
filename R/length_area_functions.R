@@ -19,7 +19,7 @@ line_distance <- function(x,y) sum(sqrt(diff(x)^2+diff(y)^2))
 #' @export
 #' @examples
 #' #extract_length()
-extract_length <- function(data) do.call(rbind,lapply(data,function(z) data.frame(file=as.character(z$file[1]),length=line_distance(z$x,z$y)))) 
+extract_length <- function(data) do.call(rbind,c(lapply(data,function(w) do.call(rbind,lapply(split(w, w$item),function(z)data.frame(file=as.character(z$file[1]),item=as.character(z$item[1]),length=line_distance(z$x,z$y))))),make.row.names = FALSE)) 
 
 #' get_outline Function
 #'
