@@ -4,7 +4,7 @@
 \alias{plot_points}
 \title{plot_points Function}
 \usage{
-plot_points(group_data)
+plot_points(group_data, current_item, current_col = "red", done_col = "blue")
 }
 \arguments{
 \item{group_data}{data to plot from}

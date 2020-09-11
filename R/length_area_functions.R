@@ -70,6 +70,8 @@ get_outline <- function(group_data){
 #'
 #' Extract total area inside plotted points in pixels. Uses get_outline to get the outline, then works out how many pixels are inside it, include the outline
 #' @param data 
+#' @param metric
+#' @param pixels_per 
 extract_area_image <- function(data,metric="pixels",pixels_per=NULL){
 	if(metric!="pixels" & is.null(pixels_per)) stop("If metric is not pixels, pixels_per must be numeric")
 	out <- do.call(rbind,lapply(split(data, data$item),function(z){
@@ -94,6 +96,8 @@ extract_area_image <- function(data,metric="pixels",pixels_per=NULL){
 #'
 #' Extract total area inside plotted points in pixels. Uses get_outline to get the outline, then works out how many pixels are inside it, include the outline
 #' @param data 
+#' @param metric
+#' @param pixels_per 
 #' @export
 #' @examples
 #' #extract_length()
@@ -108,7 +112,7 @@ extract_area_image <- function(data,metric="pixels",pixels_per=NULL){
 # 		return(area)
 # 	}))
 # }
-extract_area <- function(data) do.call(rbind,c(lapply(data,extract_area_image),make.row.names = FALSE)) 
+extract_area <- function(data,metric="pixels",pixels_per=NULL) do.call(rbind,c(lapply(data,extract_area_image,metric=metric,pixels_per=pixels_per),make.row.names = FALSE)) 
 
 
 
