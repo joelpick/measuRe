@@ -14,7 +14,25 @@ library(measuRe)
 
 # Usage
 
-In order to bring up the UI you need to run the "measuRe" function 
+In order to bring up the UI you need to run the "measuRe" function:
 
-*measuRe("folder path where images are located")*
+all_data <- *measuRe("folder path where images are located")*
 
+The application runs best in standalone R, though if you add x11 = T it'll run fine in R Studio.
+
+
+After you've measured all photos:
+
+*extract_length/extract_area(all_data)* to extract length/area for each photo measured in total number of pixels.
+
+
+# Application
+
+**Prev**: Previous image in folder;
+**Next**: Next image in folder, when the image is the last in the list, the application will close;
+**Add**: Allows for mesuring of more than one object per image;
+**Zoom**: Zoom in on a part of image by clicking the Zoom button and then the top left and bottom right around the point of interest;
+**Zoom Out**: Zooms the image out to the original size;
+**Delete Item**: Allows for removal of one object;
+**Delete All**: Removes all points from the image;
+**Finish**: Closes the window and saves a R datafile with existing coordinates.
