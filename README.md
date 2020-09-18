@@ -43,3 +43,8 @@ After you've measured all images:
 **Delete All**: Removes all points from the image.
 
 **Finish**: Closes the window and saves a R datafile with existing coordinates.
+
+The number in the bottom right denotes which image you are currently working on/total number of images within the folder path
+
+
+<img src="https://user-images.githubusercontent.com/37153494/93581817-8e3e9500-f999-11ea-9c24-d5707808cf53.png" width="1000" height="700" />>
