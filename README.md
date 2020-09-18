@@ -28,11 +28,18 @@ After you've measured all photos:
 
 # Application
 
-**Prev**: Previous image in folder;
-**Next**: Next image in folder, when the image is the last in the list, the application will close;
-**Add**: Allows for mesuring of more than one object per image;
-**Zoom**: Zoom in on a part of image by clicking the Zoom button and then the top left and bottom right around the point of interest;
-**Zoom Out**: Zooms the image out to the original size;
-**Delete Item**: Allows for removal of one object;
-**Delete All**: Removes all points from the image;
+**Prev**: Previous image in folder.
+
+**Next**: Next image in folder, when the image is the last in the list, the application will close.
+
+**Add**: Allows for mesuring of more than one object per image.
+
+**Zoom**: Zoom in on a part of image by clicking the Zoom button and then the top left and bottom right around the point of interest.
+
+**Zoom Out**: Zooms the image out to the original size.
+
+**Delete Item**: Allows for removal of one object.
+
+**Delete All**: Removes all points from the image.
+
 **Finish**: Closes the window and saves a R datafile with existing coordinates.
