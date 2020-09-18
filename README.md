@@ -23,7 +23,7 @@ The application runs best in standalone R, though if you add x11 = T it'll run f
 
 After you've measured all images:
 
-*extract_length/extract_area(all_data)* to extract length/area for each image measured in total number of pixels.
+*extract_length/extract_area(all_data)* to extract length/area for each object within an image measured in total number of pixels.
 
 
 # Application
