@@ -30,13 +30,13 @@ After you've measured all images:
 
 **Prev**: Previous image in folder.
 
-**Next**: Next image in folder, when the image is the last in the list, the application will close.
+**Next**: Next image in folder. When the image is the last in the list, the application will close.
 
-**Add**: Allows for mesuring of more than one object per image.
+**Add**: Allows for measuring of more than one object per image.
 
 **Zoom**: Zoom in on a part of image by clicking the Zoom button and then the top left and bottom right around the point of interest.
 
-**Zoom Out**: Zooms the image out to the original size.
+**Zoom Out**: Return the image to the original size pre-zoom.
 
 **Delete Item**: Allows for removal of one object.
 
@@ -44,7 +44,7 @@ After you've measured all images:
 
 **Finish**: Closes the window and saves a R datafile with existing coordinates.
 
-The number in the bottom right denotes which image you are currently working on/total number of images within the folder path
+The number in the bottom right denotes which image you are currently working on/total number of images within the folder path.
 
 
 <img src="https://user-images.githubusercontent.com/37153494/93581817-8e3e9500-f999-11ea-9c24-d5707808cf53.png" width="1000" height="700" />>
